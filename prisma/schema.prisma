@@ -121,21 +121,21 @@ model TransactionUser {
 
 
 model Order {
-  id        String       @id @default(cuid())  
+  id          String    @id @default(cuid())
   name        String
-  description  String
-  price     Float
-  quantity Float
-  payments  Payment[]
-  paid      Boolean @default(false)
+  description String
+  price       Float
+  quantity    Float
+  payments    Payment[] 
+  paid        Boolean   @default(false)
 }
 
 model Payment {
-  id            String       @id @default(cuid()) 
-  amount        Float  
-  orderId       String
-  order         Order    @relation(fields: [orderId], references: [id])
-  email         String
-  
+  id      String   @id @default(cuid())
+  amount  Float
+  orderId String
+  order   Order?   @relation(fields: [orderId], references: [id])
+  email   String
 }
+
 

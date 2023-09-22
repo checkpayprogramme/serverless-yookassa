@@ -1,0 +1,30 @@
+
+###
+GET https://serverless-yookassa.vercel.app/
+content-type: application/json
+
+
+###
+POST https://serverless-yookassa.vercel.app/
+content-type: application/json
+
+{
+    "name": "sample",
+    "price": 50.00,
+    "description": "Desk ned", 
+    "quantity": 1,
+    "email": "test@admin.ru"
+}
+
+
+###
+POST http://localhost:3030
+content-type: application/json
+
+{
+    "name": "sample",
+    "price": 50.00,
+    "description": "Desk ned", 
+    "quantity": 1,
+    "email": "test@admin.ru"
+}

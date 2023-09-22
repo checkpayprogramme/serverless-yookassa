@@ -29,97 +29,93 @@ dotenv.config();
     });
 
 // POST
-    instance.post('/', async (req: FastifyRequest, res: FastifyReply) => {
-      try {
-        // Получаем данные из тела POST-запроса
-        const { price, name, description, quantity, email }:any = req.body;
-        const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = process.env
-  
-        // Выводим полученные данные на печать
-        console.log('Email:', email);
-        console.log('Сумма оплаты:', price);
-        console.log('Название:', name);
-        console.log('Описание:', description);
-        console.log('Количество:', quantity);  
-       
-        // =========================================================================
-        const newOrder = await createOrder({
-          price, name, description, quantity
-        });
-        
-        if(!newOrder){
-          req.log.error('ERROR CREATE ORDER') 
-        }
+instance.post('/', async (req: FastifyRequest, res: FastifyReply) => {
+  try {
+    // Получаем данные из тела POST-запроса
+    const { price, name, description, quantity, email }:any = req.body;
+    const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = process.env;
 
-        const newPayment = await createPayment({
-          order: {connect: { id: newOrder.id }},
-          email: email,
-          amount: price
-          
-          
-        });
+    // Выводим полученные данные на печать
+    console.log('Email:', email);
+    console.log('Сумма оплаты:', price);
+    console.log('Название:', name);
+    console.log('Описание:', description);
+    console.log('Количество:', quantity);
 
-        const url = "https://api.yookassa.ru/v3/payments";
-
-        // получаем заказ из БД и цену заказа
-        var order_id = newOrder.id;        
-        var order_price = newOrder.price;
-      
-        // параметры для запроса
-        var headers = {
-            "Authorization": `Basic ` + btoa(`${SHOP_ID_YOOKASSA}:${TOKEN_YOOKASSA}`),
-            "Idempotence-Key": uuidv4().toString(),
-            "Content-Type": 'application/json'
-        };
-        var params = {
-            "amount": {
-                "value": price.toString(),
-                "currency": "RUB"
-            },
-            "payment_method_data": {
-                "type": "bank_card"
-            },
-            "confirmation": {
-                "type": "redirect",
-                "return_url": REDIRECT_URL_YOOKASSA_WEBHOOK
-            },
-            "description": name + description,
-            "save_payment_method": "false"
-        };
-      
-        // запрос к юкассе
-        axios.post(url, params, {
-            headers: headers,
-        }).then((res) => {
-            return res.data;
-        })
-            .then(async (res) => {
-                if (res.status == "pending") {
-                    // await orders.doc(order_id).update({"payment_id": res.payment_method.id});
-      
-      
-                    res.send({
-                        "url": res.confirmation.confirmation_url, 
-                    });
-                }
-            })
-            .catch((e:any) => {
-              req.log.error('ERROR', e.message) 
-              console.error(e);
-              res.send({
-                  "status": "error",
-                  "body": e.message
-              });
-            });
-
-
-
-
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-      }
+    // =========================================================================
+    const newOrder = await createOrder({
+      price, name, description, quantity
     });
+
+    if (!newOrder) {
+      req.log.error('ERROR CREATE ORDER');
+      return res.status(500).send('Internal Server Error');
+    }
+
+    const newPayment = await createPayment({
+      order: { connect: { id: newOrder.id } },
+      email: email,
+      amount: price
+    });
+
+    const url = "https://api.yookassa.ru/v3/payments";
+
+    // получаем заказ из БД и цену заказа
+    var order_id = newOrder.id;
+    var order_price = newOrder.price;
+
+    // параметры для запроса
+    var headers = {
+      "Authorization": `Basic ` + btoa(`${SHOP_ID_YOOKASSA}:${TOKEN_YOOKASSA}`),
+      "Idempotence-Key": uuidv4().toString(),
+      "Content-Type": 'application/json'
+    };
+    var params = {
+      "amount": {
+        "value": price.toString(),
+        "currency": "RUB"
+      },
+      "payment_method_data": {
+        "type": "bank_card"
+      },
+      "confirmation": {
+        "type": "redirect",
+        "return_url": REDIRECT_URL_YOOKASSA_WEBHOOK
+      },
+      "description": name + description,
+      "save_payment_method": "false"
+    };
+
+    // запрос к юкассе
+    axios.post(url, params, {
+      headers: headers,
+    }).then((response) => {
+      const responseData = response.data;
+      if (responseData.status == "pending") {
+        console.log("YooKASSA====", responseData.confirmation.confirmation_url);
+        return res.send({
+          "url": responseData.confirmation.confirmation_url,
+        });
+      } else {
+        return res.status(200).send('OK'); 
+      }
+    }).catch((e: any) => {
+      req.log.error('ERROR', e.message);
+      console.error(e);
+      return res.status(500).send({
+        "status": "error",
+        "body": e.message
+      });
+    });
+    
+    
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
 
     // WEBhook POST
     instance.post('/webhook', async (req: FastifyRequest, res: FastifyReply) => {
@@ -144,6 +140,7 @@ dotenv.config();
       }
     });
   
+
     // Добавьте другие маршруты, связанные с платежами, если необходимо
     // WEBhook GET
     instance.get("/webhook", async (req: FastifyRequest, res: FastifyReply) => {
