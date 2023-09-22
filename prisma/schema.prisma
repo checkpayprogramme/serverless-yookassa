@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String               @id @default(cuid())
+  username           String               @unique
+  email              String               @unique
+  password           String
+  first_name         String?              @map("first_name")
+  last_name          String?              @map("last_name")
+  middle_name        String               @map("middle_name")
+  date_birth         DateTime
+  phone_user         String?              @map("phone_user")
+  phone_additional   String?              @map("phone_additional")
+  link_to_profile    String?
+  date_create_user   DateTime             @default(now())
+  date_modified      DateTime             @updatedAt
+  trademark          String?
+  locale_user        String?              @map("locale_user")
+  image_url_user     String?              @map("image_url_user")
+  auth_is_telegram   Boolean              @default(false) @map("auth_is_telegram")
+  auth_is_yandex     Boolean              @default(false) @map("auth_is_yandex")
+  auth_is_google     Boolean              @default(false) @map("auth_is_google")
+  role               String?              @default("buyer")
+  bio                String?
+  is_black_list      Boolean              @default(false)
+  products           Product[]
+  balance            Float                @default(0.00)
+  appointmentBooking AppointmentBooking[]
+  transactionUser    TransactionUser[]
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String
+  color    String
+  slug     String
+  products Product[]
+}
+
+model OtherPhotos {
+  id           String    @id @default(cuid())
+  errors       String
+  valid        Boolean
+  name         String
+  size         String
+  type         String
+  imageUrl     String
+  lastModified DateTime  @updatedAt
+  products     Product[]
+}
+
+model Product {
+  id              String            @id @default(cuid())
+  isFavorite      Boolean?          @default(false)
+  name            String
+  description     String
+  image           String
+  tags            Tag[]
+  price_product   Float?
+  author          User?             @relation(fields: [authorId], references: [id])
+  authorId        String?
+  tax             String?
+  taxation        String?
+  text            String?
+  otherPhotos     OtherPhotos[]
+  slotSchedule    SlotSchedule[]
+  transactionUser TransactionUser[]
+}
+
+model SlotSchedule {
+  id                  String               @id @default(cuid())
+  serviceProduct      Product              @relation(fields: [serviceProductId], references: [id])
+  serviceProductId    String
+  availableSlots      Boolean
+  durationService     String
+  price               Float?
+  date                String?
+  time                String?
+  appointmentBookings AppointmentBooking[]
+}
+
+model AppointmentBooking {
+  id              String            @id @default(cuid())
+  slotSchedule    SlotSchedule      @relation(fields: [slotScheduleId], references: [id])
+  slotScheduleId  String
+  clientData      User              @relation(fields: [clientDataId], references: [id])
+  clientDataId    String
+  date_create     DateTime          @default(now())
+  date_modified   DateTime          @updatedAt
+  status          String
+  transactionUser TransactionUser[]
+}
+
+model TransactionUser {
+  id                   String              @id @default(cuid())
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  userId               String
+  appointmentBookingId String?
+  amount               Float               @default(0.0)
+  currency             String              @default("RUB")
+  status               String              @default("Pending")
+  paymentId            String
+  changingBalance      String
+  descriptionBalance   String
+  user                 User                @relation(fields: [userId], references: [id])
+  appointmentBooking   AppointmentBooking? @relation(fields: [appointmentBookingId], references: [id])
+  product              Product?            @relation(fields: [productId], references: [id])
+  productId            String?
+}
