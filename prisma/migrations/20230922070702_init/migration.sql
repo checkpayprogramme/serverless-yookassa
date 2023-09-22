@@ -111,6 +111,27 @@ CREATE TABLE "TransactionUser" (
 );
 
 -- CreateTable
+CREATE TABLE "Order" (
+    "id" STRING NOT NULL,
+    "order_id" STRING NOT NULL,
+    "price" FLOAT8 NOT NULL,
+    "paid" BOOL NOT NULL,
+
+    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Payment" (
+    "id" STRING NOT NULL,
+    "payment_id" STRING NOT NULL,
+    "amount" FLOAT8 NOT NULL,
+    "orderId" STRING NOT NULL,
+    "email" STRING NOT NULL,
+
+    CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_OtherPhotosToProduct" (
     "A" STRING NOT NULL,
     "B" STRING NOT NULL
@@ -127,6 +148,12 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Order_order_id_key" ON "Order"("order_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Payment_payment_id_key" ON "Payment"("payment_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_OtherPhotosToProduct_AB_unique" ON "_OtherPhotosToProduct"("A", "B");
@@ -160,6 +187,9 @@ ALTER TABLE "TransactionUser" ADD CONSTRAINT "TransactionUser_appointmentBooking
 
 -- AddForeignKey
 ALTER TABLE "TransactionUser" ADD CONSTRAINT "TransactionUser_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_OtherPhotosToProduct" ADD CONSTRAINT "_OtherPhotosToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "OtherPhotos"("id") ON DELETE CASCADE ON UPDATE CASCADE;

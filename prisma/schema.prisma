@@ -118,3 +118,24 @@ model TransactionUser {
   product              Product?            @relation(fields: [productId], references: [id])
   productId            String?
 }
+
+
+model Order {
+  id        String       @id @default(cuid())  
+  name        String
+  description  String
+  price     Float
+  quantity Float
+  payments  Payment[]
+  paid      Boolean @default(false)
+}
+
+model Payment {
+  id            String       @id @default(cuid()) 
+  amount        Float  
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id])
+  email         String
+  
+}
+
