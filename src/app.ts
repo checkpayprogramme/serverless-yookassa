@@ -53,7 +53,7 @@ async function app(
   instance.register(
     async (instance: FastifyInstance, opts: FastifyServerOptions, done) => {
       instance.get(
-        "/get-payment-yookassa/:paymentId",
+        "/get-payments-yookassa/:paymentId",
         async (
           req: FastifyRequest<CustomRouteGenericParam>,
           res: FastifyReply
@@ -75,7 +75,7 @@ async function app(
       );
 
       instance.get(
-        "/get-payment-yookassa",
+        "/get-payments-yookassa",
         async (
           req: FastifyRequest<CustomRouteGenericQuery>,
           res: FastifyReply
