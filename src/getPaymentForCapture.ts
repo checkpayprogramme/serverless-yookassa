@@ -13,26 +13,27 @@ export const getPaymentForCapture = async ({paymentObgect}:any)=>{
 
 const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = process.env
 
+console.log("paymentObgectStart=====")
 
 console.log("paymentObgect=====", paymentObgect)
 
 
-const checkout = new YooCheckout({ shopId: 'your_shopId', secretKey: 'your_secretKey' });
+// const checkout = new YooCheckout({ shopId: 'your_shopId', secretKey: 'your_secretKey' });
 
 const paymentId = '21966b95-000f-50bf-b000-0d78983bb5bc';
 
 const idempotenceKey = '02347fc4-a1f0-49db-807e-f0d67c2ed5a5';
 
-const capturePayload: ICapturePayment = {
-    amount: {
-        value: '2.00',
-        currency: 'RUB'
-    }
-};
+// const capturePayload: ICapturePayment = {
+//     amount: {
+//         value: '2.00',
+//         currency: 'RUB'
+//     }
+// };
 
 try {
-    const payment = await checkout.capturePayment(paymentId, capturePayload, idempotenceKey);
-    console.log(payment)
+    // const payment = await checkout.capturePayment(paymentId, capturePayload, idempotenceKey);
+    console.log("payment")
 } catch (error) {
      console.error(error);
 }

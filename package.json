@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node api/serverless.ts",
+    "dev": "ts-node api/serverless.ts",
     "build": "tsc -p tsconfig.json",
     "vercel": "vercel dev",
     "prisma:generate": "prisma generate",
