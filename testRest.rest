@@ -28,3 +28,7 @@ content-type: application/json
     "quantity": 1,
     "email": "test@admin.ru"
 }
+
+###
+GET http://localhost:3030
+content-type: application/json

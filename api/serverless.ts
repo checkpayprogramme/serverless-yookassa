@@ -17,29 +17,29 @@ app.register(import('../src/app'), {
 });
 
 
-// // Only Server Start the server on port 3030
-// const { HOST = 'localhost', PORT = '3030' } = process.env;
-// const start = async () => {
-//   try {
-//     await app.listen({ port: parseInt(PORT, 10), host: HOST }); // Add 'host' option
+// Only Server Start the server on port 3030
+const { HOST = 'localhost', PORT = '3030' } = process.env;
+const start = async () => {
+  try {
+    await app.listen({ port: parseInt(PORT, 10), host: HOST }); // Add 'host' option
 
-//     const address = app.server.address();
-//     const port = typeof address === 'string' ? address : address?.port;
-//     app.log.info(`Server start http://localhost:${port}`); // Update the address
-//     console.log(`Server start http://localhost:${port}`); // Update the address
+    const address = app.server.address();
+    const port = typeof address === 'string' ? address : address?.port;
+    app.log.info(`Server start http://localhost:${port}`); // Update the address
+    console.log(`Server start http://localhost:${port}`); // Update the address
 
-//   } catch (err) {
-//     app.log.error(err);
-//     process.exit(1);
-//   }
-// };
-// start()
-// // END Only Server Start the server on port 3030
+  } catch (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
+};
+start()
+// END Only Server Start the server on port 3030
 
 
-// Only function Vercel
+// // Only function Vercel
 
-export default async (req:FastifyRequest, res:FastifyReply) => {
-    await app.ready();
-    app.server.emit('request', req, res);
-}
+// export default async (req:FastifyRequest, res:FastifyReply) => {
+//     await app.ready();
+//     app.server.emit('request', req, res);
+// }

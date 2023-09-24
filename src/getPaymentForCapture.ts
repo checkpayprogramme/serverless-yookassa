@@ -6,28 +6,34 @@ import axios from "axios";
 dotenv.config();
 
 
+import { YooCheckout, ICapturePayment } from '@a2seven/yoo-checkout';
 
 
-export const getPaymentForCapture = async ({payment_id}:any)=>{
+export const getPaymentForCapture = async ({paymentObgect}:any)=>{
 
 const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = process.env
 
 
-const url = `https://api.yookassa.ru/v3/payments/${payment_id}/capture`;
+console.log("paymentObgect=====", paymentObgect)
 
-    var headers = {
-        "Authorization": `Basic ` + btoa(`${SHOP_ID_YOOKASSA}:${TOKEN_YOOKASSA}`),
-        "Idempotence-Key": uuidv4().toString(),
-        "Content-Type": 'application/json'
-    };
 
-    return await axios.post(url, {}, {
-        headers: headers,
-    }).then((res) => res.data).then(async (res) => {
-        res.log.log("Платеж успешно подтвержден", res);
-        return true;
-    }).catch((err) => {
-        console.error("Ошибка при подтверждении платежа", err);
-        return false;
-    });
+const checkout = new YooCheckout({ shopId: 'your_shopId', secretKey: 'your_secretKey' });
+
+const paymentId = '21966b95-000f-50bf-b000-0d78983bb5bc';
+
+const idempotenceKey = '02347fc4-a1f0-49db-807e-f0d67c2ed5a5';
+
+const capturePayload: ICapturePayment = {
+    amount: {
+        value: '2.00',
+        currency: 'RUB'
+    }
+};
+
+try {
+    const payment = await checkout.capturePayment(paymentId, capturePayload, idempotenceKey);
+    console.log(payment)
+} catch (error) {
+     console.error(error);
+}
 }
