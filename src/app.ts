@@ -109,11 +109,12 @@ async function app(
       const { price, name, description, quantity, email, currency }: any = req.body;
 
       const url = "https://api.yookassa.ru/v3/payments";
+      const idempotenceKey = uuidv4().toString()
 
       // параметры для запроса
       const headers = {
         "Authorization": `Basic ` + btoa(`${SHOP_ID_YOOKASSA}:${TOKEN_YOOKASSA}`),
-        "Idempotence-Key": uuidv4().toString(),
+        "Idempotence-Key": idempotenceKey,
         "Content-Type": 'application/json'
       };
       const params = {
@@ -129,6 +130,7 @@ async function app(
           "return_url": REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM
         },
         "description": name + description,
+        "metadata":{idempotenceKey},
         "save_payment_method": "false"
       };
 
