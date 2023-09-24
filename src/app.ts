@@ -12,7 +12,7 @@ import { getPaymentForCapture } from "./getPaymentForCapture";
 import { YooCheckout } from '@a2seven/yoo-checkout';
 dotenv.config();
 
-const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_PAYMENT_CONFIRM } = process.env;
+const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM } = process.env;
 
 interface IQueryString {
   paymentId: string;
@@ -126,7 +126,7 @@ async function app(
         },
         "confirmation": {
           "type": "redirect",
-          "return_url": REDIRECT_URL_YOOKASSA_PAYMENT_CONFIRM
+          "return_url": REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM
         },
         "description": name + description,
         "save_payment_method": "false"
@@ -181,7 +181,7 @@ async function app(
 
         if (status === 'waiting_for_capture') {
           // Сюда попадаем, если клиент оплатил
-          await getPaymentForCapture({object});
+          await getPaymentForCapture({objectPayment:object});
         }
       }
 
