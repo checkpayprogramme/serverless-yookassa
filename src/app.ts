@@ -171,6 +171,10 @@ async function app(
     try {
       const { event, object }: any = req.body;
 
+      console.log("EVENT===",event)
+      console.log("OBJ===",object)
+
+
       if (event === 'payment.waiting_for_capture') {
         const payment_id = object.id;
         const status = object.status;
