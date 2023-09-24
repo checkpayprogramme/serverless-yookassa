@@ -181,7 +181,7 @@ async function app(
 
         if (status === 'waiting_for_capture') {
           // Сюда попадаем, если клиент оплатил
-          await getPaymentForCapture(object);
+          await getPaymentForCapture({object});
         }
       }
 

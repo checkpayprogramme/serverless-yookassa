@@ -9,14 +9,14 @@ dotenv.config();
 import { YooCheckout, ICapturePayment } from '@a2seven/yoo-checkout';
 
 
-export const getPaymentForCapture = async ({object}:any)=>{
+export const getPaymentForCapture = async ({objectPayment}:any)=>{
 
 const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = process.env
 
-console.log("paymentObgectStartNew=====")
+console.log("paymentObgectStartNew=====", objectPayment)
 
-if(object){
-    console.log("paymentObgect=====", object)
+if(objectPayment){
+    console.log("paymentObgectIS=====", objectPayment)
 
 }
 
