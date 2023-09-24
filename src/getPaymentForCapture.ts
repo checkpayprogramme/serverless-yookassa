@@ -15,8 +15,10 @@ const { SHOP_ID_YOOKASSA, TOKEN_YOOKASSA, REDIRECT_URL_YOOKASSA_WEBHOOK } = proc
 
 console.log("paymentObgectStart=====")
 
-console.log("paymentObgect=====", paymentObgect)
+if(paymentObgect){
+    console.log("paymentObgect=====", paymentObgect)
 
+}
 
 // const checkout = new YooCheckout({ shopId: 'your_shopId', secretKey: 'your_secretKey' });
 
