@@ -129,7 +129,7 @@ async function app(
           "return_url": REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM
         },
         "description": name +" "+ description,
-        "metadata":{idempotenceKey, quantity},
+        "metadata":{idempotenceKey, quantity, email},
         "save_payment_method": "false"
       };
 
