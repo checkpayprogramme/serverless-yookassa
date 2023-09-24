@@ -106,7 +106,7 @@ async function app(
 
     try {
 
-      const { price, name, description, quantity, email, currency }: any = req.body;
+      const { price, name, description, quantity, email, currency, transactionType }: any = req.body;
       const url = "https://api.yookassa.ru/v3/payments";
       const idempotenceKey = uuidv4().toString()
 
@@ -129,7 +129,7 @@ async function app(
           "return_url": REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM
         },
         "description": name +" "+ description,
-        "metadata":{idempotenceKey, quantity, email},
+        "metadata":{idempotenceKey, quantity, email, transactionType},
         "save_payment_method": "false"
       };
 
@@ -168,10 +168,7 @@ async function app(
     try {
       const { event, object }: any = req.body;
 
-      console.log("EVENT===",event)
-      console.log("OBJ===",object)
-
-
+     
       if (event === 'payment.waiting_for_capture') {
         const payment_id = object.id;
         const status = object.status;

@@ -112,7 +112,7 @@ model TransactionUser {
   status               String              @default("Pending")
   paymentId            String
   changingBalance      String
-  descriptionBalance   String
+  description          String
   user                 User                @relation(fields: [userId], references: [id])
   appointmentBooking   AppointmentBooking? @relation(fields: [appointmentBookingId], references: [id])
   product              Product?            @relation(fields: [productId], references: [id])
