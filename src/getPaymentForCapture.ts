@@ -1,5 +1,4 @@
 import { YooCheckout, ICapturePayment } from '@a2seven/yoo-checkout';
-import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -18,9 +17,9 @@ export const getPaymentForCapture = async ({ objectPayment }: any) => {
     };
 
     try {
-        const payment = await checkout.capturePayment(paymentId, capturePayload, idempotenceKey);
-        console.log("idempotenceKey====", idempotenceKey)
-        console.log("payment", payment)
+        const payment = await checkout.capturePayment(paymentId, capturePayload, idempotenceKey);       
+        console.log("payment succeeded: ", payment.id)
+
     } catch (error) {
         console.error(error);
     }

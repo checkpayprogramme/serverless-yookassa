@@ -107,7 +107,6 @@ async function app(
     try {
 
       const { price, name, description, quantity, email, currency }: any = req.body;
-
       const url = "https://api.yookassa.ru/v3/payments";
       const idempotenceKey = uuidv4().toString()
 
@@ -129,8 +128,8 @@ async function app(
           "type": "redirect",
           "return_url": REDIRECT_URL_YOOKASSA_AFTE_PAYMENT_FORM
         },
-        "description": name + description,
-        "metadata":{idempotenceKey},
+        "description": name +" "+ description,
+        "metadata":{idempotenceKey, quantity},
         "save_payment_method": "false"
       };
 
@@ -143,9 +142,7 @@ async function app(
 
       const firstResponseData = await firstResponse.json();
 
-      if (firstResponseData.status === "pending") {
-
-        // Отправляем ответ от YooKassa API обратно пользователю, который сделал первый запрос
+      if (firstResponseData.status === "pending") {     
         res.send({
           "email": email,
           "payment_id": firstResponseData.id,
@@ -160,13 +157,11 @@ async function app(
         res.status(500).send('Internal Server Error');
       }
 
-
     } catch (error) {
       console.error(error);
       return res.status(500).send('Internal Server Error');
     }
   });
-
 
   // WEBhook POST
   instance.post('/webhook', async (req: FastifyRequest, res: FastifyReply) => {
@@ -182,7 +177,7 @@ async function app(
         const status = object.status;
 
         if (status === 'waiting_for_capture') {
-          // Сюда попадаем, если клиент оплатил
+          //если клиент оплатил
           await getPaymentForCapture({objectPayment:object});
         }
       }
