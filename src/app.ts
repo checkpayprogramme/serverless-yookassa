@@ -40,7 +40,7 @@ async function app(
 ) {
 
   await instance.register(cors, {
-    origin: ["http://localhost", "http://localhost:5173", "https://booking.lavrentev.tk", "http://194.58.109.31:5173", "http://194.58.109.31"],
+    origin: ["https://lk.kabinet-dom-dushi.ru"],
     methods: ["POST"]
   })
 
